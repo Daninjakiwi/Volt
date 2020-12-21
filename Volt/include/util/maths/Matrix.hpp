@@ -11,7 +11,7 @@ namespace volt {
 		int _size;
 	public:
 		Matrix() : _data(nullptr), _size(size) {
-			_data = (T*)calloc(maths::square(size), sizeof(T));
+			_data = (T*)calloc((size_t)maths::square(size), sizeof(T));
 		}
 		~Matrix() {
 			free(_data);

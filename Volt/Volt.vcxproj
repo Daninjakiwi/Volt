@@ -85,7 +85,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\core\GraphicsContext.hpp" />
+    <ClInclude Include="include\platform\windows\glext.h" />
+    <ClInclude Include="include\platform\windows\khrplatform.h" />
     <ClInclude Include="include\platform\windows\VoltWin.hpp" />
+    <ClInclude Include="include\platform\windows\WglContext.hpp" />
+    <ClInclude Include="include\platform\windows\wglext.h" />
+    <ClInclude Include="include\platform\windows\WGLFunctions.hpp" />
     <ClInclude Include="include\platform\windows\WindowsWindow.hpp" />
     <ClInclude Include="include\util\Input.hpp" />
     <ClInclude Include="include\util\maths\Maths.hpp" />
@@ -94,6 +100,8 @@
     <ClInclude Include="include\Volt.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\platform\windows\WGLFunctions.cpp" />
+    <ClCompile Include="src\platform\windows\WglContext.cpp" />
     <ClCompile Include="src\platform\windows\WindowsWindow.cpp" />
     <ClCompile Include="src\util\maths\Maths.cpp" />
     <ClCompile Include="src\util\maths\Matrix.cpp" />

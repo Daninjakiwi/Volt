@@ -10,10 +10,12 @@ namespace volt {
 		union {
 			T x;
 			T r;
+			T width;
 		};
 		union {
 			T y;
 			T g;
+			T height;
 		};
 	public:
 		Vector2() : x((T)0), y((T)0) {
@@ -24,7 +26,7 @@ namespace volt {
 		}
 
 		T Length() {
-			return maths::squareroot(maths::square(x) + maths::square(y));
+			return (T)maths::squareroot(maths::square(x) + maths::square(y));
 		}
 
 		Vector2& Normalise() {
@@ -135,7 +137,7 @@ namespace volt {
 		}
 
 		T Length() {
-			return maths::squareroot(maths::square(this->x) + maths::square(this->y) + maths::square(z));
+			return (T)maths::squareroot(maths::square(this->x) + maths::square(this->y) + maths::square(z));
 		}
 
 		//Normalise

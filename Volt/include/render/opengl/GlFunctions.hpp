@@ -1,4 +1,7 @@
 #pragma once
+
+#ifdef BUILD_WINDOWS
+#pragma once
 #include <platform/windows/VoltWin.hpp>
 #include <gl/GL.h>
 #include <platform/windows/glext.h>
@@ -98,6 +101,16 @@ typedef void (APIENTRYP PFNGLBUFFERSUBDATAPROC)(GLenum target, GLintptr offset, 
 GLAPI PFNGLBUFFERSUBDATAPROC volt_glBufferSubData;
 #define glBufferSubData volt_glBufferSubData
 
+typedef void* (APIENTRYP PFNGLMAPBUFFERRANGEPROC)(GLenum target, GLintptr offset, GLsizeiptr length, GLbitfield access);
+GLAPI PFNGLMAPBUFFERRANGEPROC volt_glMapBufferRange;
+#define glMapBufferRange volt_glMapBufferRange
+
+GLAPI PFNGLUNMAPBUFFERPROC volt_glUnmapBuffer;
+#define glUnmapBuffer volt_glUnmapBuffer
+
+GLAPI PFNGLMAPBUFFERPROC volt_glMapBuffer;
+#define glMapBuffer volt_glMapBuffer
+
 /*
 
 Shader program functions
@@ -191,7 +204,8 @@ GLAPI PFNGLUNIFORMMATRIX4FVPROC volt_glUniformMatrix4fv;
 typedef void (APIENTRYP PFNGLGENERATEMIPMAPPROC)(GLenum target);
 GLAPI PFNGLGENERATEMIPMAPPROC volt_glGenerateMipmap;
 #define glGenerateMipmap volt_glGenerateMipmap
+#endif
 
 namespace volt {
-	void LoadWGLFunctions();
+	void loadGlFunctions();
 }

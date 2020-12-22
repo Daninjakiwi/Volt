@@ -123,6 +123,10 @@ namespace volt {
 
 		//Render frame
 
+		if (m_context) {
+			m_context->renderFrame();
+		}
+
 		SwapBuffers(hdc);
 
 		if (m_context) {
@@ -261,6 +265,12 @@ namespace volt {
 	void Window::setBackgroundColour(Vec4 colour) {
 		if (m_context) {
 			m_context->setBackgroundColour(colour);
+		}
+	}
+
+	void Window::drawQuad(Quad& quad, unsigned int flags) {
+		if (m_context) {
+			m_context->drawQuad(quad, flags);
 		}
 	}
 

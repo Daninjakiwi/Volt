@@ -51,7 +51,22 @@
     <ClInclude Include="include\platform\windows\wglext.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\platform\windows\WGLFunctions.hpp">
+    <ClInclude Include="include\render\opengl\GlFunctions.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\opengl\GlShader.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\opengl\GlRenderer2d.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\Renderer2d.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\Quad.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\opengl\GlManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -71,7 +86,19 @@
     <ClCompile Include="src\platform\windows\WglContext.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="include\platform\windows\WGLFunctions.cpp">
+    <ClCompile Include="src\render\opengl\GlFunctions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\opengl\GlShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\opengl\GlRenderer2d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\Quad.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\opengl\GlManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

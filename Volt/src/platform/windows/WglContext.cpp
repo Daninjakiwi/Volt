@@ -1,9 +1,9 @@
 #ifdef BUILD_WINDOWS
 #include <platform/windows/WglContext.hpp>
-#include <platform/windows/WGLFunctions.hpp>
+#include <render/opengl/GlFunctions.hpp>
 
 namespace volt {
-	WglContext::WglContext(Window* window) : m_device(nullptr), m_context(nullptr) {
+	WglContext::WglContext(Window* window) : m_device(nullptr), m_context(nullptr), m_renderer_2d(nullptr) {
 		m_device = GetDC(window->m_handle);
 
 		HGLRC temp_context = wglCreateContext(m_device);
@@ -36,7 +36,7 @@ namespace volt {
 
 			PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC)wglGetProcAddress("wglCreateContextAttribsARB");
 			PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)wglGetProcAddress("wglSwapIntervalEXT");
-			wglSwapIntervalEXT(1);
+			//wglSwapIntervalEXT(1);
 
 			m_context = wglCreateContextAttribsARB(m_device, 0, attribs);
 
@@ -45,9 +45,19 @@ namespace volt {
 
 			wglMakeCurrent(m_device, m_context);
 
-			LoadWGLFunctions();
+			loadGlFunctions();
 
 			glViewport(0, 0, window->m_size.x, window->m_size.y);
+
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			if (major == 4) {
+				m_renderer_2d = new GlRenderer2d(window->m_size);
+			}
+			else if (major == 3) {
+				m_renderer_2d = new GlRenderer2d(window->m_size);
+			}
 		}
 
 	}
@@ -60,12 +70,20 @@ namespace volt {
 		glClearColor(colour.r, colour.g, colour.b, colour.a);
 	}
 
-	void WglContext::drawQuad2D(Vec2 pos, Vec2 size, Vec4 colour) {
-
+	void WglContext::drawQuad(Quad& quad, unsigned int flags) {
+		if (m_renderer_2d) {
+			m_renderer_2d->drawQuad(quad, flags);
+		}
 	}
 
 	void WglContext::makeCurrent() {
+		wglMakeCurrent(m_device, m_context);
+	}
 
+	void WglContext::renderFrame() {
+		if (m_renderer_2d) {
+			m_renderer_2d->renderFrame();
+		}
 	}
 
 	void WglContext::clear() {

@@ -1,4 +1,6 @@
-#include <platform/windows/WGLFunctions.hpp>
+#ifdef BUILD_WINDOWS
+
+#include <render/opengl/GlFunctions.hpp>
 
 /*
 
@@ -47,6 +49,9 @@ Buffer data functions
 
 PFNGLBUFFERDATAPROC volt_glBufferData = 0;
 PFNGLBUFFERSUBDATAPROC volt_glBufferSubData = 0;
+PFNGLMAPBUFFERRANGEPROC volt_glMapBufferRange = 0;
+PFNGLUNMAPBUFFERPROC volt_glUnmapBuffer = 0;
+PFNGLMAPBUFFERPROC volt_glMapBuffer = 0;
 
 /*
 
@@ -92,7 +97,7 @@ PFNGLGENERATEMIPMAPPROC volt_glGenerateMipmap = 0;
 
 
 namespace volt {
-	void LoadWGLFunctions() {
+	void loadGlFunctions() {
 		volt_glCreateVertexArrays = (PFNGLCREATEVERTEXARRAYSPROC)wglGetProcAddress("glCreateVertexArrays");
 		volt_glDeleteVertexArrays = (PFNGLDELETEVERTEXARRAYSPROC)wglGetProcAddress("glDeleteVertexArrays");
 		volt_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)wglGetProcAddress("glBindVertexArray");
@@ -116,6 +121,9 @@ namespace volt {
 
 		volt_glBufferData = (PFNGLBUFFERDATAPROC)wglGetProcAddress("glBufferData");
 		volt_glBufferSubData = (PFNGLBUFFERSUBDATAPROC)wglGetProcAddress("glBufferSubData");
+		volt_glMapBufferRange = (PFNGLMAPBUFFERRANGEPROC)wglGetProcAddress("glMapBufferRange");
+		volt_glUnmapBuffer = (PFNGLUNMAPBUFFERPROC)wglGetProcAddress("glUnmapBuffer");
+		volt_glMapBuffer = (PFNGLMAPBUFFERPROC)wglGetProcAddress("glMapBuffer");
 
 		volt_glCreateProgram = (PFNGLCREATEPROGRAMPROC)wglGetProcAddress("glCreateProgram");
 		volt_glDeleteProgram = (PFNGLDELETEPROGRAMPROC)wglGetProcAddress("glDeleteProgram");
@@ -140,3 +148,6 @@ namespace volt {
 		volt_glGenerateMipmap = (PFNGLGENERATEMIPMAPPROC)wglGetProcAddress("glGenerateMipmap");
 	}
 }
+
+
+#endif

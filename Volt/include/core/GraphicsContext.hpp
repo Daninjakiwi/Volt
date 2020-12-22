@@ -1,5 +1,5 @@
 #pragma once
-#include <util/maths/Vector.hpp>
+#include <render/Quad.hpp>
 
 namespace volt {
 	enum class ContextType {
@@ -13,9 +13,11 @@ namespace volt {
 
 		virtual void setBackgroundColour(Vec4 colour) {};
 
-		virtual void drawQuad2D(Vec2 pos, Vec2 size, Vec4 colour) {};
+		virtual void drawQuad(Quad& quad, unsigned int flags) {};
 
 		virtual void makeCurrent() {};
+
+		virtual void renderFrame() {};
 
 		virtual void clear() {};
 	};

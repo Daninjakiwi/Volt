@@ -3,7 +3,7 @@
 
 namespace volt {
 	struct Quad {
-		unsigned int id;
+		unsigned long long id;
 		Vec2 pos;
 		Vec2 size;
 		Vec4 colour;

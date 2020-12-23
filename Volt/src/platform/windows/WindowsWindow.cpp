@@ -274,6 +274,12 @@ namespace volt {
 		}
 	}
 
+	void Window::drawTexture(Texture& tex, Vec2 pos, Vec2 size) {
+		if (m_context) {
+			m_context->drawTexture(tex, pos, size);
+		}
+	}
+
 	LRESULT Window::processMessage(HWND handle, UINT message, WPARAM w_param, LPARAM l_param) {
 		switch (message)
 		{

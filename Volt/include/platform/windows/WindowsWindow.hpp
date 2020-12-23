@@ -2,8 +2,6 @@
 
 #ifdef BUILD_WINDOWS
 
-#define DONT_UPDATE 0x30;
-
 #include <string>
 #include <unordered_map>
 
@@ -65,6 +63,7 @@ namespace volt {
 
 		void setBackgroundColour(Vec4 colour);
 		void drawQuad(Quad& quad, unsigned int flags = 0);
+		void drawTexture(Texture& tex, Vec2 pos, Vec2 size);
 
 		operator bool() const { return m_is_open; };
 	private:

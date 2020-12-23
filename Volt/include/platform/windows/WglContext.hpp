@@ -18,6 +18,7 @@ namespace volt {
 		void setBackgroundColour(Vec4 colour);
 
 		void drawQuad(Quad& quad, unsigned int flags);
+		void drawTexture(Texture& tex, Vec2 pos, Vec2 size);
 
 		void makeCurrent();
 

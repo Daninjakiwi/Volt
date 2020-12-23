@@ -38,6 +38,8 @@ namespace volt {
 			PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)wglGetProcAddress("wglSwapIntervalEXT");
 			//wglSwapIntervalEXT(1);
 
+
+
 			m_context = wglCreateContextAttribsARB(m_device, 0, attribs);
 
 			wglMakeCurrent(NULL, NULL);
@@ -48,6 +50,13 @@ namespace volt {
 			loadGlFunctions();
 
 			glViewport(0, 0, window->m_size.x, window->m_size.y);
+
+			int val;
+
+			glGetIntegerv(GL_MAX_TEXTURE_SIZE, &val);
+
+			glGetIntegerv(GL_MAX_ELEMENTS_VERTICES, &val);
+
 
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -73,6 +82,12 @@ namespace volt {
 	void WglContext::drawQuad(Quad& quad, unsigned int flags) {
 		if (m_renderer_2d) {
 			m_renderer_2d->drawQuad(quad, flags);
+		}
+	}
+
+	void WglContext::drawTexture(Texture& tex, Vec2 pos, Vec2 size) {
+		if (m_renderer_2d) {
+			m_renderer_2d->drawTexture(tex, pos, size);
 		}
 	}
 

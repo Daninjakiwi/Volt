@@ -69,6 +69,24 @@
     <ClInclude Include="include\render\opengl\GlManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\core\VoltDefines.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\Texture.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\opengl\GlTexture.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\opengl\GlShaderData2d.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\core\Resources.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\util\maths\Maths.cpp">
@@ -99,6 +117,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\render\opengl\GlManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\opengl\GlTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\Texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\opengl\GlShaderData2d.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\Resources.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

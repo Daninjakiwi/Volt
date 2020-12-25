@@ -17,6 +17,9 @@ typedef void (APIENTRYP PFNGLCREATEVERTEXARRAYSPROC)(GLsizei n, GLuint* buffers)
 GLAPI PFNGLCREATEVERTEXARRAYSPROC volt_glCreateVertexArrays;
 #define glCreateVertexArrays volt_glCreateVertexArrays
 
+GLAPI PFNGLGENVERTEXARRAYSPROC volt_glGenVertexArrays;
+#define glGenVertexArrays volt_glGenVertexArrays
+
 typedef void (APIENTRYP PFNGLDELETEVERTEXARRAYSPROC)(GLsizei n, const GLuint* arrays);
 GLAPI PFNGLDELETEVERTEXARRAYSPROC volt_glDeleteVertexArrays;
 #define glDeleteVertexArrays volt_glDeleteVertexArrays
@@ -86,6 +89,9 @@ GLAPI PFNGLDELETEBUFFERSPROC volt_glDeleteBuffers;
 typedef void (APIENTRYP PFNGLBINDBUFFERPROC)(GLenum target, GLuint buffer);
 GLAPI PFNGLBINDBUFFERPROC volt_glBindBuffer;
 #define glBindBuffer volt_glBindBuffer
+
+GLAPI PFNGLGENBUFFERSPROC volt_glGenBuffers;
+#define glGenBuffers volt_glGenBuffers
 
 /*
 

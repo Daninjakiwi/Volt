@@ -42,37 +42,91 @@ namespace volt {
 
 		std::getline(ss, line);
 
-		m_font_size = std::stoi(line.substr(26, 3));
+		auto start = line.find("size=") + 5;
+		auto end = line.find(" ", start);
+
+		m_font_size = std::stoi(line.substr(start, end - start));
 
 		std::getline(ss, line);
 
-		m_line_height = std::stoi(line.substr(18, 3));
+		start = line.find("lineHeight=") + 11;
+		end = line.find(" ", start);
 
-		m_font_height = std::stoi(line.substr(27, 3));
+		m_line_height = std::stoi(line.substr(start, end - start));
+
+
+		start = line.find("base=") + 5;
+		end = line.find(" ", start);
+
+		m_font_height = std::stoi(line.substr(start, end - start));
+
+		start = line.find("scaleW=") + 7;
+		end = line.find(" ", start);
+
+		float img_width = std::stof(line.substr(start, end - start));
+
+		start = line.find("scaleH=") + 7;
+		end = line.find(" ", start);
+
+		float img_height = std::stof(line.substr(start, end - start));
+
 
 		std::getline(ss, line);
 		std::getline(ss, line);
 
-		int count = std::stoi(line.substr(12, 3));
+		start = line.find("count=") + 6;
+		end = line.find(" ", start);
+
+		int count = std::stoi(line.substr(start, end - start));
 
 		for (int i = 0; i < count; i++) {
+
 			std::getline(ss, line);
 
-			unsigned char c = std::stoi(line.substr(8, 3));
+			start = line.find("id=") + 3;
+			end = line.find(" ", start);
+
+			unsigned char c = std::stoi(line.substr(start, end - start));
 
 			Glyph g;
 
-			g.w = std::stoi(line.substr(36, 3));
-			g.h = std::stoi(line.substr(48, 3));
-			g.offsetx = std::stoi(line.substr(61, 3));
-			g.offsety = std::stoi(line.substr(74, 3));
-			g.advance = std::stoi(line.substr(88, 3));
+			start = line.find("width=") + 6;
+			end = line.find(" ", start);
 
-			g.wr = (float)g.w / (float)m_tex.getWidth();
-			g.hr = (float)g.h / (float)m_tex.getHeight();
+			g.w = std::stoi(line.substr(start, end - start));
 
-			g.xr = std::stof(line.substr(18, 3)) / (float)m_tex.getWidth();
-			g.yr = 1.0f - (std::stof(line.substr(25, 3)) / (float)m_tex.getHeight());
+			start = line.find("height=") + 7;
+			end = line.find(" ", start);
+
+			g.h = std::stoi(line.substr(start, end - start));
+
+			start = line.find("xoffset=") + 8;
+			end = line.find(" ", start);
+
+			g.offsetx = std::stoi(line.substr(start, end - start));
+
+			start = line.find("yoffset=") + 8;
+			end = line.find(" ", start);
+
+			g.offsety = std::stoi(line.substr(start, end - start));
+
+			start = line.find("xadvance=") + 9;
+			end = line.find(" ", start);
+
+			g.advance = std::stoi(line.substr(start, end - start));
+
+			g.wr = (float)g.w / img_width;
+			g.hr = (float)g.h / img_height;
+
+			start = line.find("x=") + 2;
+			end = line.find(" ", start);
+
+			g.xr = std::stof(line.substr(start,end-start)) / img_width;
+
+			start = line.find("y=") + 2;
+			end = line.find(" ", start);
+
+			g.yr = 1.0f - (std::stof(line.substr(start, end - start)) / img_height);
 			g.yr -= g.hr;
 
 			m_characters[c] = g;

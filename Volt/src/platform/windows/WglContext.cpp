@@ -102,6 +102,13 @@ namespace volt {
 	}
 
 	void WglContext::renderFrame() {
+		while (!Texture::s_load_queue.empty()) {
+			auto current = Texture::s_load_queue.back();
+			current.tex->m_gl_tex->load(current.data, { current.tex->m_width, current.tex->m_height });
+			free(current.data);
+			Texture::s_load_queue.pop_back();
+		}
+
 		if (m_renderer_2d) {
 			m_renderer_2d->renderFrame();
 		}

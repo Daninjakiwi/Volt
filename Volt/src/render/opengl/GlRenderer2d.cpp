@@ -43,9 +43,9 @@ namespace volt {
 			m_projection[15] = 1.0f;
 		}
 
-		glCreateVertexArrays(1, &m_vert_array);
-		glCreateBuffers(1, &m_vert_buffer);
-		glCreateBuffers(1, &m_elem_buffer);
+		glGenVertexArrays(1, &m_vert_array);
+		glGenBuffers(1, &m_vert_buffer);
+		glGenBuffers(1, &m_elem_buffer);
 
 		glBindVertexArray(m_vert_array);
 		glBindBuffer(GL_ARRAY_BUFFER, m_vert_buffer);

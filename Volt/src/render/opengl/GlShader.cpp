@@ -1,8 +1,6 @@
 #include <render/opengl/GlShader.hpp>
 #include <render/opengl/GlFunctions.hpp>
 
-#include <iostream>
-
 namespace volt {
 	GlShader::GlShader(const char* vert_src, const char* frag_src) : m_id(0) {
 		m_id = glCreateProgram();

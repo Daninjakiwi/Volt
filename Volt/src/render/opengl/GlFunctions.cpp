@@ -13,6 +13,7 @@ PFNGLDELETEVERTEXARRAYSPROC volt_glDeleteVertexArrays = 0;
 PFNGLBINDVERTEXARRAYPROC volt_glBindVertexArray = 0;
 PFNGLENABLEVERTEXATTRIBARRAYPROC volt_glEnableVertexAttribArray = 0;
 PFNGLVERTEXATTRIBPOINTERPROC volt_glVertexAttribPointer = 0;
+PFNGLGENVERTEXARRAYSPROC volt_glGenVertexArrays = 0;
 
 /*
 
@@ -40,6 +41,7 @@ Buffer functions
 PFNGLCREATEBUFFERSPROC volt_glCreateBuffers = 0;
 PFNGLDELETEBUFFERSPROC volt_glDeleteBuffers = 0;
 PFNGLBINDBUFFERPROC volt_glBindBuffer = 0;
+PFNGLGENBUFFERSPROC volt_glGenBuffers = 0;
 
 /*
 
@@ -103,6 +105,7 @@ namespace volt {
 		volt_glBindVertexArray = (PFNGLBINDVERTEXARRAYPROC)wglGetProcAddress("glBindVertexArray");
 		volt_glEnableVertexAttribArray = (PFNGLENABLEVERTEXATTRIBARRAYPROC)wglGetProcAddress("glEnableVertexAttribArray");
 		volt_glVertexAttribPointer = (PFNGLVERTEXATTRIBPOINTERPROC)wglGetProcAddress("glVertexAttribPointer");
+		volt_glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)wglGetProcAddress("glGenVertexArrays");
 
 		volt_glCreateFramebuffers = (PFNGLCREATEFRAMEBUFFERSPROC)wglGetProcAddress("glCreateFramebuffers");
 		volt_glDeleteFramebuffers = (PFNGLDELETEFRAMEBUFFERSPROC)wglGetProcAddress("glDeleteFramebuffers");
@@ -118,6 +121,7 @@ namespace volt {
 		volt_glCreateBuffers = (PFNGLCREATEBUFFERSPROC)wglGetProcAddress("glCreateBuffers");
 		volt_glDeleteBuffers = (PFNGLDELETEBUFFERSPROC)wglGetProcAddress("glDeleteBuffers");
 		volt_glBindBuffer = (PFNGLBINDBUFFERPROC)wglGetProcAddress("glBindBuffer");
+		volt_glGenBuffers = (PFNGLGENBUFFERSPROC)wglGetProcAddress("glGenBuffers");
 
 		volt_glBufferData = (PFNGLBUFFERDATAPROC)wglGetProcAddress("glBufferData");
 		volt_glBufferSubData = (PFNGLBUFFERSUBDATAPROC)wglGetProcAddress("glBufferSubData");

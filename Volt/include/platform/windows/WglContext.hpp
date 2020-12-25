@@ -19,6 +19,7 @@ namespace volt {
 
 		void drawQuad(Quad& quad, unsigned int flags);
 		void drawTexture(Texture& tex, Vec2 pos, Vec2 size);
+		void drawString(const std::string& text, Vec2 pos, unsigned int size, unsigned long long font, Vec4 colour);
 
 		void makeCurrent();
 

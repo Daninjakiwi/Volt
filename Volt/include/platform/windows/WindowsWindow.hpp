@@ -64,6 +64,7 @@ namespace volt {
 		void setBackgroundColour(Vec4 colour);
 		void drawQuad(Quad& quad, unsigned int flags = 0);
 		void drawTexture(Texture& tex, Vec2 pos, Vec2 size);
+		void drawString(const std::string& text, Vec2 pos, unsigned int size, unsigned long long font, Vec4 colour);
 
 		operator bool() const { return m_is_open; };
 	private:

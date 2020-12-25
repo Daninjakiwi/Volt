@@ -10,11 +10,15 @@ namespace volt {
 	class Texture {
 		friend class GlRenderer2d;
 	private:
+		int m_width, m_height;
 		unsigned long long m_id;
 		GlTexture* m_gl_tex;
 	public:
 		Texture(const std::string& file);
 		~Texture();
+
+		int getWidth();
+		int getHeight();
 	};
 }
 

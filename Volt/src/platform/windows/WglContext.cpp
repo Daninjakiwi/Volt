@@ -36,7 +36,7 @@ namespace volt {
 
 			PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC)wglGetProcAddress("wglCreateContextAttribsARB");
 			PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)wglGetProcAddress("wglSwapIntervalEXT");
-			//wglSwapIntervalEXT(1);
+			wglSwapIntervalEXT(1);
 
 
 
@@ -72,7 +72,7 @@ namespace volt {
 	}
 
 	WglContext::~WglContext() {
-
+		delete m_renderer_2d;
 	}
 
 	void WglContext::setBackgroundColour(Vec4 colour) {
@@ -88,6 +88,12 @@ namespace volt {
 	void WglContext::drawTexture(Texture& tex, Vec2 pos, Vec2 size) {
 		if (m_renderer_2d) {
 			m_renderer_2d->drawTexture(tex, pos, size);
+		}
+	}
+
+	void WglContext::drawString(const std::string& text, Vec2 pos, unsigned int size, unsigned long long font, Vec4 colour) {
+		if (m_renderer_2d) {
+			m_renderer_2d->drawString(text, pos, size, font, colour);
 		}
 	}
 

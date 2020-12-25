@@ -47,14 +47,10 @@ namespace volt {
 		float* m_projection;
 		unsigned int m_vert_array, m_vert_buffer, m_elem_buffer;
 
-		unsigned long long m_count;
-
 		std::unordered_map<unsigned long long, std::vector<unsigned long long>> m_locations_map; //maps resource id -> vector of buffer indexes containing that resource
 		std::unordered_map<unsigned long long, unsigned int> m_texture_map; //maps resource id -> texture unit (cleared every frame)
-		std::unordered_map<unsigned int, unsigned long long> m_texture_map_invert;
-		unsigned long long m_quad_count;
-		unsigned long long m_first;
-		unsigned long long m_last;
+		std::unordered_map<unsigned int, unsigned long long> m_texture_map_invert; //maps texture unit -> resource id
+		unsigned long long m_count, m_delete_count, m_quad_count, m_first,m_last;
 		bool m_is_empty;
 		std::vector<Command*> m_command_queue; 
 
@@ -65,6 +61,11 @@ namespace volt {
 		void drawQuad(Quad& quad, unsigned int flags);
 
 		void drawTexture(Texture& tex, Vec2 pos, Vec2 size);
+		void drawTexture(Texture& tex, Vec2 pos, Vec2 size, Vec2* coords);
+		void drawTexture(Texture& tex, Vec2 pos, Vec2 size, Vec2* coords, Vec4 colour_filter);
+
+		void drawString(const std::string& text, Vec2 pos, unsigned int size, unsigned long long font, Vec4 colour);
+
 		void renderFrame();
 	private:
 		void insertIndices(unsigned long long index, unsigned int* indices);

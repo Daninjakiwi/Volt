@@ -85,6 +85,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\core\Font.hpp" />
     <ClInclude Include="include\core\GraphicsContext.hpp" />
     <ClInclude Include="include\core\Resources.hpp" />
     <ClInclude Include="include\core\VoltDefines.hpp" />
@@ -111,6 +112,7 @@
     <ClInclude Include="include\Volt.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\core\Font.cpp" />
     <ClCompile Include="src\core\Resources.cpp" />
     <ClCompile Include="src\platform\windows\WglContext.cpp" />
     <ClCompile Include="src\platform\windows\WindowsWindow.cpp" />

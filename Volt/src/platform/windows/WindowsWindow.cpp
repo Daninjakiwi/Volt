@@ -280,6 +280,12 @@ namespace volt {
 		}
 	}
 
+	void Window::drawString(const std::string& text, Vec2 pos, unsigned int size, unsigned long long font, Vec4 colour) {
+		if (m_context) {
+			m_context->drawString(text, pos, size, font, colour);
+		}
+	}
+
 	LRESULT Window::processMessage(HWND handle, UINT message, WPARAM w_param, LPARAM l_param) {
 		switch (message)
 		{

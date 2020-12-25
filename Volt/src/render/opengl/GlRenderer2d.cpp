@@ -10,6 +10,8 @@
 
 #include <render/opengl/GlShaderData2d.hpp>
 
+#include <core/Font.hpp>
+
 namespace volt {
 
 	const unsigned long long quad_size = 9 * 4 * sizeof(float);
@@ -24,12 +26,11 @@ namespace volt {
 	BindTextureCommand::BindTextureCommand(unsigned int id, unsigned int slot) : m_id(id), m_slot(slot) {}
 
 	void BindTextureCommand::execute() {
-		glActiveTexture(GL_TEXTURE0 + m_slot);
-		glBindTexture(GL_TEXTURE_2D, m_id);
+		gl::bindTexture(m_id, m_slot);
 	}
 
 
-	GlRenderer2d::GlRenderer2d(iVec2 size) : Renderer2d(size), m_shader(nullptr), m_vert_array(0), m_vert_buffer(0), m_elem_buffer(0), m_count((unsigned long long)2048) {
+	GlRenderer2d::GlRenderer2d(iVec2 size) : Renderer2d(size), m_shader(nullptr), m_vert_array(0), m_vert_buffer(0), m_elem_buffer(0), m_count((unsigned long long)262144) {
 		m_shader = new GlShader(vert_2d, frag_2d);
 		m_projection = (float*)calloc(16, sizeof(float));
 
@@ -55,7 +56,7 @@ namespace volt {
 		glEnableVertexAttribArray(2);
 		glEnableVertexAttribArray(3);
 
-		glVertexAttribPointer(0, 2, GL_FLOAT, false, 9 * sizeof(float), nullptr); //Position
+		glVertexAttribPointer(0, 2, GL_FLOAT, false, 9 * sizeof(float), nullptr);
 		glVertexAttribPointer(1, 2, GL_FLOAT, false, 9 * sizeof(float), (const void*)8);
 		glVertexAttribPointer(2, 4, GL_FLOAT, false, 9 * sizeof(float), (const void*)16);
 		glVertexAttribPointer(3, 1, GL_FLOAT, false, 9 * sizeof(float), (const void*)32);
@@ -74,6 +75,7 @@ namespace volt {
 			glUniform1i(location, i);
 		}
 
+		m_delete_count = 0;
 		m_quad_count = 0;
 		m_first = 0;
 		m_last = 0;
@@ -88,8 +90,50 @@ namespace volt {
 		glDeleteBuffers(1, &m_elem_buffer);
 	}
 
+	void GlRenderer2d::drawTexture(Texture& tex, Vec2 pos, Vec2 size) {
+		Vec2 coords[4] = { {0.0f,0.0f}, {1.0f,0.0f}, {1.0f,1.0f}, {0.0f,1.0f} };
+		drawTexture(tex, pos, size, coords);
+	}
+
+	void GlRenderer2d::drawTexture(Texture& tex, Vec2 pos, Vec2 size, Vec2* coords) {
+		drawTexture(tex, pos, size, coords, {0.0f,0.0f,0.0f,0.0f});
+	}
+
+	void GlRenderer2d::drawString(const std::string& text, Vec2 pos, unsigned int size, unsigned long long font, Vec4 colour) {
+		Font* f = Font::get(font);
+
+		int offset = 0;
+
+		float scale = (float)size / (float)f->m_font_size;
+
+		float l = (float)f->m_line_height - (float)f->m_font_height;
+
+		float line_height = (l + ((float)f->m_font_height / 2.0f)) * scale;
+
+
+		for (unsigned char c : text) {
+			Glyph g = f->m_characters[c];
+
+			g.w *= scale;
+			g.h *= scale;
+			g.offsetx *= scale;
+			g.offsety *= scale;
+			g.advance *= scale;
+
+			Vec2 char_pos(pos.x + offset + g.offsetx, pos.y - g.offsety + line_height);
+			Vec2 size(g.w, -g.h);
+
+			Vec2 coords[4] = { {g.xr, g.yr + g.hr}, {g.xr + g.wr, g.yr + g.hr}, {g.xr + g.wr, g.yr}, {g.xr, g.yr} };
+			drawTexture(f->m_tex, char_pos, size, coords, colour);
+	
+			offset += g.advance;
+		}
+
+	}
+
 	void GlRenderer2d::insertIndices(unsigned long long index, unsigned int* indices) {
 		gl::bindElementBuffer(m_elem_buffer);
+
 
 		void* data = glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, index * indices_size, indices_size, GL_MAP_WRITE_BIT);
 
@@ -165,6 +209,7 @@ namespace volt {
 			insertIndices(m_quad_count, indices);
 
 			m_quad_count++;
+			m_delete_count++;
 		}
 		else {
 			index = m_locations_map[quad.id][0];
@@ -177,13 +222,6 @@ namespace volt {
 			quad.pos.x + quad.size.x, quad.pos.y,0.0f, 0.0f, quad.colour.r, quad.colour.g,quad.colour.b,quad.colour.a, 0.0f,
 			quad.pos.x + quad.size.x, quad.pos.y + quad.size.y,0.0f, 0.0f, quad.colour.r,quad.colour.g,quad.colour.b,quad.colour.a, 0.0f,
 			quad.pos.x,quad.pos.y + quad.size.y,0.0f, 0.0f, quad.colour.r,quad.colour.g,quad.colour.b,quad.colour.a, 0.0f
-			};
-
-			float v[24] = {
-				quad.pos.x, quad.pos.y,quad.colour.r, quad.colour.g, quad.colour.b,quad.colour.a,
-				quad.pos.x + quad.size.x, quad.pos.y,quad.colour.r, quad.colour.g,quad.colour.b,quad.colour.a,
-				quad.pos.x + quad.size.x, quad.pos.y + quad.size.y,quad.colour.r,quad.colour.g,quad.colour.b,quad.colour.a,
-				quad.pos.x,quad.pos.y + quad.size.y,quad.colour.r,quad.colour.g,quad.colour.b,quad.colour.a
 			};
 
 			insertVertices(index, vertices);
@@ -207,8 +245,10 @@ namespace volt {
 		}
 	}
 
-	void GlRenderer2d::drawTexture(Texture& tex, Vec2 pos, Vec2 size) {
+	void GlRenderer2d::drawTexture(Texture& tex, Vec2 pos, Vec2 size, Vec2* coords, Vec4 filter_colour) {
 		//CHECK IF TEXTURE IS IN MAP
+
+		m_delete_count++;
 
 		unsigned int slot = m_texture_map[tex.m_id];
 		unsigned long long index;
@@ -226,7 +266,7 @@ namespace volt {
 
 				m_texture_map.erase(replaced);
 
-				//Check if texture is in current queue
+				//Check if replaced texture is in current draw queue
 				if (replaced >= m_first && replaced <= m_last && !m_is_empty) {
 					//FLUSH DRAW QUEUE
 					DrawCommand* cmd = new DrawCommand(m_first * indices_size, (m_last - m_first + 1) * 6);
@@ -244,7 +284,7 @@ namespace volt {
 
 			BindTextureCommand* cmd = new BindTextureCommand(tex.m_gl_tex->getId(), slot);
 			m_command_queue.push_back(cmd);
-		}
+		}	
 
 		if (m_quad_count == m_count) {
 			//Copy data into local memory and then insert into new buffer
@@ -296,10 +336,10 @@ namespace volt {
 		m_quad_count++;
 
 		float vertices[36] = {
-			pos.x, pos.y, 0.0f,0.0f, 0.0f,0.0f,0.0f,0.0f,slot,
-			pos.x + size.x, pos.y, 1.0f,0.0f, 0.0f,0.0f,0.0f,0.0f,slot,
-			pos.x + size.x, pos.y + size.y, 1.0f,1.0f, 0.0f,0.0f,0.0f,0.0f,slot,
-			pos.x, pos.y + size.y,0.0f,1.0f, 0.0f,0.0f,0.0f,0.0f,slot
+			pos.x, pos.y, coords[0].x,coords[0].y, filter_colour.r,filter_colour.g,filter_colour.b,filter_colour.a,slot,
+			pos.x + size.x, pos.y, coords[1].x,coords[1].y, filter_colour.r,filter_colour.g,filter_colour.b,filter_colour.a,slot,
+			pos.x + size.x, pos.y + size.y, coords[2].x,coords[2].y, filter_colour.r,filter_colour.g,filter_colour.b,filter_colour.a,slot,
+			pos.x, pos.y + size.y,coords[3].x,coords[3].y, filter_colour.r,filter_colour.g,filter_colour.b,filter_colour.a,slot
 		};
 
 		insertVertices(index, vertices);
@@ -319,7 +359,8 @@ namespace volt {
 				m_last = index;
 				m_is_empty = false;
 			}
-		}	
+		}
+
 	}
 
 	void GlRenderer2d::renderFrame() {
@@ -347,6 +388,16 @@ namespace volt {
 
 			m_texture_map.clear();
 			m_texture_map_invert.clear();
+		}
+
+		if (m_delete_count > m_count / 2 || (m_delete_count > m_count / 3 && m_quad_count >= m_count / 1.1)) {
+			m_locations_map.clear();
+
+			m_delete_count = 0;
+			m_quad_count = 0;
+			m_first = 0;
+			m_last = 0;
+			m_is_empty = true;
 		}
 	}
 }

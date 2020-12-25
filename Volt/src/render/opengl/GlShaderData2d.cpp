@@ -37,18 +37,17 @@ namespace volt {
 
 		void main() {
 			int index = int(v_tex_index);
-
+			
 			if (index > 0) {
-				vec4 tex = texture(u_textures[index-1], v_tex_coord);
-
+				vec4 tex = texture(u_textures[index-1],v_tex_coord);
+				float alpha = tex.a;
 				if (v_colour.a > 0) {
-					if (tex.a < 0.05) {
-						discard;
-					}
-					col = v_colour;
+					col = vec4(v_colour.r,v_colour.g,v_colour.b,v_colour.a * alpha);
 				} else {
 					col = tex;
 				}
+
+				
 			} else {
 				col = v_colour;
 			}

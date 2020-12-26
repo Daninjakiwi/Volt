@@ -65,6 +65,7 @@ namespace volt {
 		void drawTexture(Texture& tex, Vec2 pos, Vec2 size, Vec2* coords, Vec4 colour_filter);
 
 		void drawString(const std::string& text, Vec2 pos, unsigned int size, unsigned long long font, Vec4 colour);
+		void drawTriangle(Vec2 p1, Vec2 p2, Vec2 p3, Vec4 colour);
 
 		void renderFrame();
 	private:

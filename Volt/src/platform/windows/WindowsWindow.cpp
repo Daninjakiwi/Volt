@@ -286,6 +286,12 @@ namespace volt {
 		}
 	}
 
+	void Window::drawTriangle(Vec2 p1, Vec2 p2, Vec2 p3, Vec4 colour) {
+		if (m_context) {
+			m_context->drawTriangle(p1, p2, p3, colour);
+		}
+	}
+
 	LRESULT Window::processMessage(HWND handle, UINT message, WPARAM w_param, LPARAM l_param) {
 		switch (message)
 		{

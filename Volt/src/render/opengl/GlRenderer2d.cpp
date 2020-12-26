@@ -245,6 +245,88 @@ namespace volt {
 		}
 	}
 
+	void GlRenderer2d::drawTriangle(Vec2 p1, Vec2 p2, Vec2 p3, Vec4 colour) {
+		unsigned long long index;
+
+		//Check if buffer needs to be expanded
+		if (m_quad_count == m_count) {
+			//Copy data into local memory and then insert into new buffer
+			void* data = glMapBuffer(GL_ARRAY_BUFFER, GL_READ_ONLY);
+
+			void* temp = malloc(quad_size * m_count * (unsigned long long)2u);
+
+			if (temp) {
+				memcpy(temp, data, quad_size * m_count);
+			}
+
+			glUnmapBuffer(GL_ARRAY_BUFFER);
+
+			glBufferData(GL_ARRAY_BUFFER, quad_size * m_count * 2, temp, GL_DYNAMIC_DRAW);
+
+			free(temp);
+
+			gl::bindElementBuffer(m_elem_buffer);
+
+			data = glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_READ_ONLY);
+
+			temp = malloc((unsigned long long)12u * sizeof(unsigned int) * m_count);
+
+			if (temp) {
+				memcpy(temp, data, (unsigned long long)6u * sizeof(unsigned int) * m_count);
+			}
+
+			glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, (unsigned long long)12u * sizeof(unsigned int) * m_count, temp, GL_DYNAMIC_DRAW);
+
+			free(temp);
+
+			m_count *= 2;
+		}
+
+		//Check if quad needs to be added to buffer
+		index = m_quad_count;
+
+		m_locations_map[0].push_back(m_quad_count);
+
+		unsigned int offset = m_quad_count * 4;
+
+		unsigned int indices[6] = {
+			0 + offset, 1 + offset, 2 + offset, 0 + offset, 1 + offset, 2 + offset
+		};
+
+		insertIndices(m_quad_count, indices);
+
+		m_quad_count++;
+		m_delete_count++;
+
+		float vertices[36] = {
+			p1.x, p1.y,0.0f, 0.0f, colour.r, colour.g,colour.b,colour.a, 0.0f,
+			p2.x, p2.y,0.0f, 0.0f, colour.r, colour.g,colour.b,colour.a, 0.0f,
+			p3.x, p3.y,0.0f, 0.0f, colour.r,colour.g,colour.b,colour.a, 0.0f,
+			0.0f,0.0f,0.0f, 0.0f, colour.r,colour.g,colour.b,colour.a, 0.0f
+		};
+
+		insertVertices(index, vertices);
+
+		if (index == m_last + 1 && !m_is_empty) {
+			m_last++;
+		}
+		else {
+			if (!(index >= m_first && index <= m_last && !m_is_empty)) {
+				if (!m_is_empty) {
+					DrawCommand* cmd = new DrawCommand(m_first * indices_size, (m_last - m_first + 1) * 6);
+
+					m_command_queue.push_back(cmd);
+				}
+
+				m_first = index;
+				m_last = index;
+				m_is_empty = false;
+			}
+		}
+	}
+
 	void GlRenderer2d::drawTexture(Texture& tex, Vec2 pos, Vec2 size, Vec2* coords, Vec4 filter_colour) {
 		//CHECK IF TEXTURE IS IN MAP
 

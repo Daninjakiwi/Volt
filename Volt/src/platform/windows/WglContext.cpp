@@ -97,9 +97,17 @@ namespace volt {
 		}
 	}
 
+	void WglContext::drawTriangle(Vec2 p1, Vec2 p2, Vec2 p3, Vec4 colour) {
+		if (m_renderer_2d) {
+			m_renderer_2d->drawTriangle(p1, p2, p3, colour);
+		}
+	}
+
 	void WglContext::makeCurrent() {
 		wglMakeCurrent(m_device, m_context);
 	}
+
+
 
 	void WglContext::renderFrame() {
 		while (!Texture::s_load_queue.empty()) {

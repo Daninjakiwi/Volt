@@ -8,13 +8,13 @@
 
 namespace volt {
 
-	unsigned long long fonts::SEGOE;
+	unsigned long long fonts::SEGOE = 1;
 
 	std::unordered_map<unsigned long long, std::unique_ptr<Font>> Font::s_fonts;
 	bool Font::s_is_loaded = false;
 
 	void Font::loadFonts() {
-		fonts::SEGOE = load("resources/fonts/segoe.fnt", "resources/images/segoe.png");
+		s_fonts[1] = std::make_unique<Font>(1, "resources/fonts/segoe.fnt", "resources/images/segoe.png");
 		s_is_loaded = true;
 	}
 

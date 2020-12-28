@@ -90,6 +90,12 @@
     <ClInclude Include="include\core\Font.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\render\stb_resize.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\render\DynamicTexture.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\util\maths\Maths.cpp">
@@ -135,6 +141,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\core\Font.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\DynamicTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

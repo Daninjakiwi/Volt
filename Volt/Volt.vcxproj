@@ -95,6 +95,7 @@
     <ClInclude Include="include\platform\windows\WglContext.hpp" />
     <ClInclude Include="include\platform\windows\wglext.h" />
     <ClInclude Include="include\platform\windows\WindowsWindow.hpp" />
+    <ClInclude Include="include\render\DynamicTexture.hpp" />
     <ClInclude Include="include\render\opengl\GlShaderData2d.hpp" />
     <ClInclude Include="include\render\opengl\GlFunctions.hpp" />
     <ClInclude Include="include\render\opengl\GlManager.hpp" />
@@ -104,6 +105,7 @@
     <ClInclude Include="include\render\Quad.hpp" />
     <ClInclude Include="include\render\Renderer2d.hpp" />
     <ClInclude Include="include\render\stb_image.h" />
+    <ClInclude Include="include\render\stb_resize.h" />
     <ClInclude Include="include\render\Texture.hpp" />
     <ClInclude Include="include\util\Input.hpp" />
     <ClInclude Include="include\util\maths\Maths.hpp" />
@@ -116,6 +118,7 @@
     <ClCompile Include="src\core\Resources.cpp" />
     <ClCompile Include="src\platform\windows\WglContext.cpp" />
     <ClCompile Include="src\platform\windows\WindowsWindow.cpp" />
+    <ClCompile Include="src\render\DynamicTexture.cpp" />
     <ClCompile Include="src\render\opengl\GlFunctions.cpp" />
     <ClCompile Include="src\render\opengl\GlManager.cpp" />
     <ClCompile Include="src\render\opengl\GlRenderer2d.cpp" />

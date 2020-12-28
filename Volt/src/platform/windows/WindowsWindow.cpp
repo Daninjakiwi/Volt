@@ -183,6 +183,7 @@ namespace volt {
 	bool Window::isKeyJustPressed(Keys key) {
 		auto search = m_keys.find(key);
 		if (search != m_keys.end() && search->second == 0) {
+			search->second = 1;
 			return true;
 		}
 		return false;

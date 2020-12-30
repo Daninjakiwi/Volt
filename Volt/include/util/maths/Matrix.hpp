@@ -2,34 +2,44 @@
 #include <memory>
 
 #include <util/maths/Maths.hpp>
+#include <util/maths/Vector.hpp>
 
 namespace volt {
 	template<typename T, int size>
 	class Matrix {
 	private:
-		T* _data;
+		T _data[size * size];
 		int _size;
 	public:
-		Matrix() : _data(nullptr), _size(size) {
-			_data = (T*)calloc((size_t)maths::square(size), sizeof(T));
+		Matrix() : _size(size) {
+			init();
 		}
+
+		Matrix(T value) : _size(size) {
+			init();
+			for (int i = 0; i < size; i++) {
+				_data[(i * size) + i] = value;
+			}
+		}
+
 		~Matrix() {
-			free(_data);
+		}
+
+		void translate(Vector3<T> vec) {
+			_data[12] += vec.x;
+			_data[13] += vec.y;
+			_data[14] += vec.z;
 		}
 
 		T& operator[](int index) {
 			return _data[index];
 		}
-
-		operator T* () const { return _data; }
-
-		Matrix& Transpose() {
-			float temp = _data[4];
-			_data[4] = _data[1];
-			_data[1] = temp;
-			return *this;
+	private:
+		void init() {
+			for (int i = 0; i < size * size; i++) {
+				_data[i] = 0.0f;
+			}
 		}
-
 	};
 
 	typedef Matrix<float, 2> Mat2;

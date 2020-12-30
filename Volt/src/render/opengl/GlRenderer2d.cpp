@@ -8,7 +8,7 @@
 
 #include <core/VoltDefines.hpp>
 
-#include <render/opengl/GlShaderData2d.hpp>
+#include <render/opengl/GlShaderData.hpp>
 
 #include <core/Font.hpp>
 
@@ -47,9 +47,9 @@ namespace volt {
 		glGenBuffers(1, &m_vert_buffer);
 		glGenBuffers(1, &m_elem_buffer);
 
-		glBindVertexArray(m_vert_array);
-		glBindBuffer(GL_ARRAY_BUFFER, m_vert_buffer);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_elem_buffer);
+		gl::bindVertexArray(m_vert_array);
+		gl::bindVertexBuffer(m_vert_buffer);
+		gl::bindElementBuffer(m_elem_buffer);
 
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
@@ -64,7 +64,7 @@ namespace volt {
 		glBufferData(GL_ARRAY_BUFFER, quad_size * m_count, nullptr, GL_DYNAMIC_DRAW);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int) * m_count, nullptr, GL_DYNAMIC_DRAW);
 
-		m_shader->bind();
+		gl::bindShader(m_shader->getId());
 
 		glUniformMatrix4fv(glGetUniformLocation(m_shader->getId(), "u_projection"), 1, false, m_projection);
 
@@ -84,6 +84,8 @@ namespace volt {
 
 	GlRenderer2d::~GlRenderer2d() {
 		delete m_shader;
+
+		free(m_projection);
 
 		glDeleteVertexArrays(1, &m_vert_array);
 		glDeleteBuffers(1, &m_vert_buffer);

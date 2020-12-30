@@ -1,6 +1,9 @@
 #pragma once
 #include <render/Quad.hpp>
+#include <util/maths/Matrix.hpp>
 #include <render/Texture.hpp>
+#include <render/Mesh.hpp>
+#include <render/Material.hpp>
 
 namespace volt {
 	enum class ContextType {
@@ -18,6 +21,8 @@ namespace volt {
 		virtual void drawTexture(Texture& tex, Vec2 pos, Vec2 size) {};
 		virtual void drawString(const std::string& text, Vec2 pos, unsigned int size, unsigned long long font, Vec4 colour) {};
 		virtual void drawTriangle(Vec2 p1, Vec2 p2, Vec2 p3, Vec4 colour) {};
+		virtual void setViewMatrix(Mat4 view) {};
+		virtual void drawMesh(Mesh& mesh, Material& material, Mat4 transform) {};
 
 		virtual void makeCurrent() {};
 

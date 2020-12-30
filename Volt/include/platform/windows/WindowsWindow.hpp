@@ -7,7 +7,10 @@
 
 #include <platform/windows/VoltWin.hpp>
 #include <util/maths/Vector.hpp>
+#include <util/maths/Matrix.hpp>
 #include <util/Input.hpp>
+#include <render/Mesh.hpp>
+#include <render/Material.hpp>
 
 #include <core/GraphicsContext.hpp>
 
@@ -66,6 +69,8 @@ namespace volt {
 		void drawTexture(Texture& tex, Vec2 pos, Vec2 size);
 		void drawString(const std::string& text, Vec2 pos, unsigned int size, unsigned long long font, Vec4 colour);
 		void drawTriangle(Vec2 p1, Vec2 p2, Vec2 p3, Vec4 colour);
+		void setViewMatrix(Mat4 view);
+		void drawMesh(Mesh& mesh, Material& material, Mat4 transform);
 
 		operator bool() const { return m_is_open; };
 	private:

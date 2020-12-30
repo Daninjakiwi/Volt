@@ -1,5 +1,6 @@
 #include <render/opengl/GlShader.hpp>
 #include <render/opengl/GlFunctions.hpp>
+#include <iostream>
 
 namespace volt {
 	GlShader::GlShader(const char* vert_src, const char* frag_src) : m_id(0) {
@@ -9,6 +10,8 @@ namespace volt {
 		unsigned int frag = compile(frag_src, GL_FRAGMENT_SHADER);
 
 		if (vert != 0 && frag != 0) {
+
+			std::cout << "shader ok" << std::endl;
 
 			glAttachShader(m_id, vert);
 			glAttachShader(m_id, frag);

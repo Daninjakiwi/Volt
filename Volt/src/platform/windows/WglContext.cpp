@@ -1,9 +1,14 @@
 #ifdef BUILD_WINDOWS
 #include <platform/windows/WglContext.hpp>
 #include <render/opengl/GlFunctions.hpp>
+#include <render/opengl/GlManager.hpp>
+#include <render/Camera.hpp>
 
 namespace volt {
-	WglContext::WglContext(Window* window) : m_device(nullptr), m_context(nullptr), m_renderer_2d(nullptr) {
+
+	float rot = 0.0f;
+
+	WglContext::WglContext(Window* window) : m_device(nullptr), m_context(nullptr), m_renderer_2d(nullptr), m_renderer_3d(nullptr) {
 		m_device = GetDC(window->m_handle);
 
 		HGLRC temp_context = wglCreateContext(m_device);
@@ -57,15 +62,19 @@ namespace volt {
 
 			glGetIntegerv(GL_MAX_ELEMENTS_VERTICES, &val);
 
+			glEnable(GL_DEPTH_TEST);
+
 
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 			if (major == 4) {
 				m_renderer_2d = new GlRenderer2d(window->m_size);
+				m_renderer_3d = new GlRenderer3d(45.0f, 16.0f / 9.0f, 0.1f, 100.0f);
 			}
 			else if (major == 3) {
 				m_renderer_2d = new GlRenderer2d(window->m_size);
+				m_renderer_3d = new GlRenderer3d(45.0f, 16.0f / 9.0f, 0.1f, 100.0f);
 			}
 		}
 
@@ -73,6 +82,7 @@ namespace volt {
 
 	WglContext::~WglContext() {
 		delete m_renderer_2d;
+		delete m_renderer_3d;
 	}
 
 	void WglContext::setBackgroundColour(Vec4 colour) {
@@ -117,13 +127,30 @@ namespace volt {
 			Texture::s_load_queue.pop_back();
 		}
 
+		if (m_renderer_3d) {
+			m_renderer_3d->renderFrame();
+		}
+
+
 		if (m_renderer_2d) {
 			m_renderer_2d->renderFrame();
 		}
 	}
 
 	void WglContext::clear() {
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	}
+
+	void WglContext::setViewMatrix(Mat4 view) {
+		if (m_renderer_3d) {
+			m_renderer_3d->setViewMatrix(view);
+		}
+	}
+
+	void WglContext::drawMesh(Mesh& mesh, Material& material, Mat4 transform) {
+		if (m_renderer_3d) {
+			m_renderer_3d->drawMesh(mesh, material, transform);
+		}
 	}
 }
 

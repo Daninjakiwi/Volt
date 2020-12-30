@@ -12,6 +12,7 @@ namespace volt {
 
 	class Texture {
 		friend class GlRenderer2d;
+		friend class GlRenderer3d;
 		friend class WglContext;
 		friend class DynamicTexture;
 		friend void loadTexture(const std::string& file, Texture* tex, unsigned int scale_factor);
@@ -21,6 +22,8 @@ namespace volt {
 		GlTexture* m_gl_tex;
 		bool m_is_initialised;
 	public:
+
+
 		static std::vector<TexData> s_load_queue;
 
 		Texture(const std::string& file, unsigned int scale_factor = 1);
@@ -30,7 +33,10 @@ namespace volt {
 		int getWidth();
 		int getHeight();
 
+		bool isInitialised();
+
 		void init(const std::string& file, unsigned int scale_factor = 1);
+		void init(Vec4 colour);
 	};
 
 	struct TexData {

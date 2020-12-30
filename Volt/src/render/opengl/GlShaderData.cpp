@@ -54,4 +54,44 @@ namespace volt {
 		}		
 	)";
 
+
+	const char* vert_3d = R"(
+		#version 330 core
+
+		layout (location=0) in vec3 position;
+		layout (location=1) in vec3 normal;
+		layout (location=2) in vec2 tex_coord;
+
+		out vec3 v_normal;
+		out vec2 v_tex_coord;
+
+		uniform mat4 u_model;
+		uniform mat4 u_view;
+		uniform mat4 u_projection;
+
+		void main() {
+			v_normal = normal;
+			v_tex_coord = tex_coord;
+
+			gl_Position = u_projection * u_view * u_model * vec4(position,1.0);
+		}
+
+	)";
+
+	const char* frag_3d = R"(
+		#version 330 core
+		
+		layout (location=0) out vec4 colour;
+
+		in vec3 v_normal;
+		in vec2 v_tex_coord;
+
+		uniform sampler2D u_albedo;
+
+		void main() {
+			
+			colour = texture(u_albedo, v_tex_coord);
+		}		
+	)";
+
 }

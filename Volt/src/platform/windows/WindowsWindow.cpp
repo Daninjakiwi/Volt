@@ -107,6 +107,18 @@ namespace volt {
 		show();
 	}
 
+	void Window::setViewMatrix(Mat4 view) {
+		if (m_context) {
+			m_context->setViewMatrix(view);
+		}
+	}
+
+	void Window::drawMesh(Mesh& mesh, Material& material, Mat4 transform) {
+		if (m_context) {
+			m_context->drawMesh(mesh, material, transform);
+		}
+	}
+
 	Window::~Window() {
 		if (m_context) {
 			delete m_context;

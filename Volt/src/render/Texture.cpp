@@ -65,6 +65,12 @@ namespace volt {
 		std::thread{ loadTexture,file,this, scale_factor }.detach();
 	}
 
+	void Texture::init(Vec4 colour) {
+		m_is_initialised = true;
+
+		m_gl_tex->load(colour);
+	}
+
 	Texture::Texture(const std::string& file, unsigned int scale_factor) : m_id(resources::assignId()), m_gl_tex(nullptr), m_width(1), m_height(1), m_is_initialised(true) {
 		m_gl_tex = new GlTexture();
 
@@ -81,6 +87,10 @@ namespace volt {
 
 	int Texture::getHeight() {
 		return m_height;
+	}
+
+	bool Texture::isInitialised() {
+		return m_is_initialised;
 	}
 }
 

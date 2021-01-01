@@ -11,6 +11,7 @@ namespace volt {
 
 		virtual void setViewMatrix(Mat4 matrix) {};
 		virtual void drawMesh(Mesh& mesh, Material& material, Mat4 transform) {};
+		virtual void loadEnvironmentMap(float* data, iVec2 size) {};
 
 		virtual void renderFrame() {};
 	};

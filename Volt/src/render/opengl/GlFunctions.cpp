@@ -21,6 +21,9 @@ Frame buffer functions
 
 */
 
+PFNGLGENFRAMEBUFFERSPROC volt_glGenFramebuffers = 0;
+PFNGLGENRENDERBUFFERSPROC volt_glGenRenderbuffers = 0;
+
 PFNGLCREATEFRAMEBUFFERSPROC volt_glCreateFramebuffers = 0;
 PFNGLDELETEFRAMEBUFFERSPROC volt_glDeleteFramebuffers = 0;
 PFNGLBINDFRAMEBUFFERPROC volt_glBindFramebuffer = 0;
@@ -107,6 +110,8 @@ namespace volt {
 		volt_glVertexAttribPointer = (PFNGLVERTEXATTRIBPOINTERPROC)wglGetProcAddress("glVertexAttribPointer");
 		volt_glGenVertexArrays = (PFNGLGENVERTEXARRAYSPROC)wglGetProcAddress("glGenVertexArrays");
 
+		volt_glGenFramebuffers = (PFNGLGENFRAMEBUFFERSPROC)wglGetProcAddress("glGenFramebuffers");
+		volt_glGenRenderbuffers = (PFNGLGENRENDERBUFFERSPROC)wglGetProcAddress("glGenRenderbuffers");
 		volt_glCreateFramebuffers = (PFNGLCREATEFRAMEBUFFERSPROC)wglGetProcAddress("glCreateFramebuffers");
 		volt_glDeleteFramebuffers = (PFNGLDELETEFRAMEBUFFERSPROC)wglGetProcAddress("glDeleteFramebuffers");
 		volt_glBindFramebuffer = (PFNGLBINDFRAMEBUFFERPROC)wglGetProcAddress("glBindFramebuffer");

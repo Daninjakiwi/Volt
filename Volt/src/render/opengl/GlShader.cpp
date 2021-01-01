@@ -45,6 +45,9 @@ namespace volt {
 		glGetShaderiv(id, GL_COMPILE_STATUS, &result);
 
 		if (result == GL_FALSE) {
+
+			std::cout << "failed to compile" << type;
+
 			return 0;
 		}
 

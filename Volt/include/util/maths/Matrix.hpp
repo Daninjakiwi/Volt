@@ -98,4 +98,7 @@ namespace volt {
 
 	typedef Matrix<float, 2> Mat2;
 	typedef Matrix<float, 4> Mat4;
+
+	Mat4 lookAt(Vec3 eye, Vec3 center, Vec3 up);
+	Mat4 perspective(float fov, float aspect_ratio, float near_plane, float far_plane);
 }

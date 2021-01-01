@@ -17,6 +17,7 @@ namespace volt {
 	class GlRenderer3d : public Renderer3d {
 	private:
 		unsigned int m_vert_array, m_vert_buffer, m_elem_buffer;
+		unsigned int m_tex_irradiance, m_tex_prefilter, m_tex_brdf;
 		GlShader* m_shader;
 		Mat4 m_projection;
 		std::vector<Vertex> m_vertices;
@@ -28,7 +29,10 @@ namespace volt {
 
 		void setViewMatrix(Mat4 view);
 		void drawMesh(Mesh& mesh, Material& material, Mat4 transform);
+		void loadEnvironmentMap(float* data, iVec2 size);
 
 		void renderFrame();
+	private:
+		void drawCube();
 	};
 }

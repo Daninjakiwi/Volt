@@ -23,6 +23,7 @@ namespace volt {
 		virtual void drawTriangle(Vec2 p1, Vec2 p2, Vec2 p3, Vec4 colour) {};
 		virtual void setViewMatrix(Mat4 view) {};
 		virtual void drawMesh(Mesh& mesh, Material& material, Mat4 transform) {};
+		virtual void loadEnvironmentMap(float* data, iVec2 size) {};
 
 		virtual void makeCurrent() {};
 

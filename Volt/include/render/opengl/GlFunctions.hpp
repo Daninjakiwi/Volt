@@ -42,6 +42,12 @@ Framebuffer functions
 
 */
 
+GLAPI PFNGLGENFRAMEBUFFERSPROC volt_glGenFramebuffers;
+#define glGenFramebuffers volt_glGenFramebuffers
+
+GLAPI PFNGLGENRENDERBUFFERSPROC volt_glGenRenderbuffers;
+#define glGenRenderbuffers volt_glGenRenderbuffers
+
 GLAPI PFNGLCREATEFRAMEBUFFERSPROC volt_glCreateFramebuffers;
 #define glCreateFramebuffers volt_glCreateFramebuffers
 

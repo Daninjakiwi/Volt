@@ -71,6 +71,7 @@ namespace volt {
 		void drawTriangle(Vec2 p1, Vec2 p2, Vec2 p3, Vec4 colour);
 		void setViewMatrix(Mat4 view);
 		void drawMesh(Mesh& mesh, Material& material, Mat4 transform);
+		void loadEnvironmentMap(const std::string& file);
 
 		operator bool() const { return m_is_open; };
 	private:

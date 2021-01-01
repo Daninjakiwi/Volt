@@ -35,4 +35,27 @@ namespace volt {
 	Texture& ColourMaterial::getAo() {
 		return s_tex_white;
 	}
+
+	PbrMaterial::PbrMaterial(const std::string& path) : m_albedo(path + "/albedo.png"), m_normal(path + "/normal.png"), m_metallic(path + "/metallic.png"), m_roughness(path + "/roughness.png"), m_ao(path + "/ao.png") {
+	}
+
+	Texture& PbrMaterial::getAlbedo() {
+		return m_albedo;
+	}
+
+	Texture& PbrMaterial::getNormal() {
+		return m_normal;
+	}
+
+	Texture& PbrMaterial::getMetallic() {
+		return m_metallic;
+	}
+
+	Texture& PbrMaterial::getRoughness() {
+		return m_roughness;
+	}
+
+	Texture& PbrMaterial::getAo() {
+		return m_ao;
+	}
 }

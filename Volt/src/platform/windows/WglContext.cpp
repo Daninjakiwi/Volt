@@ -3,6 +3,7 @@
 #include <render/opengl/GlFunctions.hpp>
 #include <render/opengl/GlManager.hpp>
 #include <render/Camera.hpp>
+#include <render/stb_resize.h>
 
 namespace volt {
 
@@ -121,20 +122,27 @@ namespace volt {
 
 	void WglContext::renderFrame() {
 		while (!Texture::s_load_queue.empty()) {
-			auto current = Texture::s_load_queue.back();
-			current.tex->m_gl_tex->load(current.data, { current.tex->m_width, current.tex->m_height });
-			free(current.data);
-			Texture::s_load_queue.pop_back();
+			for (int i = 0; i < 100; i++) {
+				if (Texture::s_load_queue.find(i) != Texture::s_load_queue.end()) {
+					auto current = Texture::s_load_queue.at(i);
+					current.tex->m_gl_tex->load(current.data, { current.tex->m_width, current.tex->m_height });
+					free(current.data);
+					Texture::s_load_queue.erase(i);
+				}
+			}
 		}
 
 		if (m_renderer_3d) {
 			m_renderer_3d->renderFrame();
 		}
 
+		glDisable(GL_DEPTH_TEST);
 
 		if (m_renderer_2d) {
 			m_renderer_2d->renderFrame();
 		}
+
+		glEnable(GL_DEPTH_TEST);
 	}
 
 	void WglContext::clear() {
@@ -152,6 +160,13 @@ namespace volt {
 			m_renderer_3d->drawMesh(mesh, material, transform);
 		}
 	}
+
+	void WglContext::loadEnvironmentMap(float* data, iVec2 size) {
+		if (m_renderer_3d) {
+			m_renderer_3d->loadEnvironmentMap(data, size);
+		}
+	}
+
 }
 
 

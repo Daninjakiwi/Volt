@@ -44,11 +44,18 @@ namespace volt::gl {
 		return false;
 	}
 
-	bool bindTexture(unsigned int id, unsigned int slot) {
+	bool bindTexture(unsigned int id, unsigned int slot, unsigned int type) {
 		if (textures[slot - 1] != id) {
 			textures[slot - 1] = id;
 			glActiveTexture(GL_TEXTURE0 + slot);
-			glBindTexture(GL_TEXTURE_2D, id);
+			if (type == 1) {
+				glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+			}
+			else {
+				glBindTexture(GL_TEXTURE_2D, id);
+			}
+
+			
 			return true;
 		}
 		return false;

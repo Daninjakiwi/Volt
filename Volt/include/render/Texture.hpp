@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <vector>
+#include <unordered_map>
 
 #ifdef BUILD_WINDOWS
 
@@ -22,9 +22,7 @@ namespace volt {
 		GlTexture* m_gl_tex;
 		bool m_is_initialised;
 	public:
-
-
-		static std::vector<TexData> s_load_queue;
+		static std::unordered_map<unsigned int, TexData> s_load_queue;
 
 		Texture(const std::string& file, unsigned int scale_factor = 1);
 		Texture();

@@ -6,6 +6,8 @@
 
 #include <platform/windows/WglContext.hpp>
 
+#include <render/stb_image.h>
+
 namespace volt {
 
 
@@ -117,6 +119,19 @@ namespace volt {
 		if (m_context) {
 			m_context->drawMesh(mesh, material, transform);
 		}
+	}
+
+	void Window::loadEnvironmentMap(const std::string& file) {
+		if (m_context) {
+			stbi_set_flip_vertically_on_load(true);
+			int width, height, bpp;
+			float* data = stbi_loadf(file.c_str(), &width, &height, &bpp, 0);
+
+			m_context->loadEnvironmentMap(data, { width,height });
+
+			stbi_image_free(data);
+		}
+		
 	}
 
 	Window::~Window() {

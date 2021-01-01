@@ -32,7 +32,7 @@ namespace volt {
 		DynamicTexture m_roughness;
 		DynamicTexture m_ao;
 	public:
-		PbrMaterial();
+		PbrMaterial(const std::string& path);
 
 		Texture& getAlbedo();
 		Texture& getNormal();

@@ -13,8 +13,9 @@
 #include <render/stb_resize.h>
 
 namespace volt {
-	std::vector<TexData> Texture::s_load_queue;
+	std::unordered_map<unsigned int, TexData> Texture::s_load_queue;
 	int max_tex_size = 0;
+	unsigned int count = 0;
 
 	void loadTexture(const std::string& file, Texture* tex, unsigned int scale_factor) {
 		stbi_set_flip_vertically_on_load(true);
@@ -50,7 +51,9 @@ namespace volt {
 		d.tex = tex;
 		d.data = buffer;
 
-		Texture::s_load_queue.push_back(d);
+		Texture::s_load_queue[count] = d;
+
+		count = count == 100 ? 0 : count + 1;
 	}
 
 	Texture::Texture() : m_id(resources::assignId()), m_gl_tex(nullptr), m_width(1), m_height(1), m_is_initialised(false) {

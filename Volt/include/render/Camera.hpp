@@ -4,6 +4,7 @@
 
 namespace volt {
 	class Camera {
+		friend class GlRenderer3d;
 	private:
 		Vec3 m_position; //x,y,z
 		Vec3 m_rotation; //Pitch, Yaw, Roll (Degrees)

@@ -11,7 +11,7 @@ namespace volt {
 		GlTexture();
 		~GlTexture();
 
-		void load(void* data, iVec2 size);
+		void load(void* data, iVec2 size, bool type = 0);
 		void load(Vec4 colour);
 
 		unsigned int getId() const;

@@ -11,6 +11,8 @@ namespace volt {
 		HDC m_device;
 		HGLRC m_context;
 
+		Texture m_default;
+
 		Renderer2d* m_renderer_2d;
 		Renderer3d* m_renderer_3d;
 	public:
@@ -23,7 +25,7 @@ namespace volt {
 		void drawTexture(Texture& tex, Vec2 pos, Vec2 size);
 		void drawString(const std::string& text, Vec2 pos, unsigned int size, unsigned long long font, Vec4 colour);
 		void drawTriangle(Vec2 p1, Vec2 p2, Vec2 p3, Vec4 colour);
-		void setViewMatrix(Mat4 view);
+		void setViewMatrix(Camera& cam);
 		void drawMesh(Mesh& mesh, Material& material, Mat4 transform);
 		void loadEnvironmentMap(float* data, iVec2 size);
 

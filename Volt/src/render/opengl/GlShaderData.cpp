@@ -1,6 +1,44 @@
 #pragma once
 
 namespace volt {
+	const char* vert_background = R"(
+		#version 330 core
+		layout (location = 0) in vec3 aPos;
+
+		uniform mat4 projection;
+		uniform mat4 view;
+
+		out vec3 WorldPos;
+
+		void main() {
+			WorldPos = aPos;
+
+			mat4 rotView = mat4(mat3(view));
+			vec4 clipPos = projection * rotView * vec4(WorldPos, 1.0);
+
+			gl_Position = clipPos.xyww;
+		}
+)";
+
+	const char* frag_background = R"(
+		#version 330 core
+		out vec4 FragColor;
+		in vec3 WorldPos;
+
+		uniform samplerCube environmentMap;
+
+		void main()
+		{		
+			vec3 envColor = textureLod(environmentMap, WorldPos, 0.0).rgb;
+    
+			// HDR tonemap and gamma correct
+			envColor = envColor / (envColor + vec3(1.0));
+			envColor = pow(envColor, vec3(1.0/2.2)); 
+    
+			FragColor = vec4(envColor, 1.0);
+		}
+)";
+
 	const char* vert_2d = R"(
 		#version 330 core
 
@@ -94,15 +132,7 @@ namespace volt {
 		}		
 	)";
 
-	const char* frag_test = R"(
-#version 330 core
 
-layout (location=0) out vec4 colour;
-
-void main() {
-	colour = vec4(1.0,1.0,1.0,1.0);
-}
-)";
 
 
 	const char* vert_cubemap = R"(
@@ -485,13 +515,13 @@ float ggxDistribution(vec3 N, vec3 H, float roughness) {
 }
 
 float ggxGeometrySchlick(float NdotV, float roughness) {
-	float a = roughness;
-	float k = (a * a) / 2.0;
-	
-	float nom = NdotV;
-	float denom = NdotV * (1.0 - k) + k;
+	float r = (roughness + 1.0);
+    float k = (r*r) / 8.0;
 
-	return nom / denom;
+    float nom   = NdotV;
+    float denom = NdotV * (1.0 - k) + k;
+
+    return nom / denom;
 }
 
 float geometrySmith(vec3 N, vec3 V, vec3 L, float roughness) {
@@ -580,6 +610,45 @@ void main() {
 	colour = vec4(col, alpha);
 }
 
+)";
+
+	const char* vert_test = R"(
+#version 330 core
+
+layout (location=0) in vec3 position;
+
+uniform mat4 u_projection;
+uniform mat4 u_view;
+
+out vec3 v_world_pos;
+
+void main() {
+	v_world_pos = position;
+
+	mat4 rotView = mat4(mat3(u_view));
+	vec4 clipPos = u_projection * rotView * vec4(v_world_pos,1.0);
+
+	gl_Position = clipPos.xyww;
+}
+)";
+
+	const char* frag_test = R"(
+#version 330 core
+
+layout (location=0) out vec4 colour;
+
+in vec3 v_world_pos;
+
+uniform samplerCube u_env_map;
+
+void main() {
+	vec3 envColour = textureLod(u_env_map, v_world_pos,0.0).rgb;
+
+	envColour = envColour / (envColour + vec3(1.0));
+	envColour = pow(envColour,vec3(1.0/2.2));
+
+	colour = vec4(envColour, 1.0);
+}
 )";
 
 

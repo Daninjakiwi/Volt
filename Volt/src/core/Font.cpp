@@ -38,6 +38,7 @@ namespace volt {
 	Font::Font(unsigned long long id, const std::string& data_path, const std::string& texture_path) : m_id(id), m_font_size(0), m_font_height(0), m_line_height(0) , m_tex(texture_path) {
 
 		std::ifstream ss(data_path);
+
 		std::string line;
 
 		std::getline(ss, line);

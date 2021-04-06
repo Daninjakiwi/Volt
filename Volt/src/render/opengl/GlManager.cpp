@@ -9,8 +9,9 @@ namespace volt::gl {
 	unsigned int textures[16];
 
 	bool bindShader(unsigned int id) {
+		glUseProgram(id);
 		if (shader != id) {
-			glUseProgram(id);
+			
 			shader = id;
 			return true;
 		}
@@ -18,8 +19,9 @@ namespace volt::gl {
 	}
 
 	bool bindVertexArray(unsigned int id) {
+		glBindVertexArray(id);
 		if (va != id) {
-			glBindVertexArray(id);
+			
 			va = id;
 			return true;
 		}
@@ -27,8 +29,9 @@ namespace volt::gl {
 	}
 
 	bool bindVertexBuffer(unsigned int id) {
+		glBindBuffer(GL_ARRAY_BUFFER, id);
 		if (vb != id) {
-			glBindBuffer(GL_ARRAY_BUFFER, id);
+			
 			vb = id;
 			return true;
 		}
@@ -36,8 +39,9 @@ namespace volt::gl {
 	}
 
 	bool bindElementBuffer(unsigned int id) {
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
 		if (eb != id) {
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
+			
 			eb = id;
 			return true;
 		}
@@ -45,19 +49,26 @@ namespace volt::gl {
 	}
 
 	bool bindTexture(unsigned int id, unsigned int slot, unsigned int type) {
+		glActiveTexture(GL_TEXTURE0 + slot);
+		if (type == 1) {
+			glBindTexture(GL_TEXTURE_CUBE_MAP, id);
+		}
+		else {
+			glBindTexture(GL_TEXTURE_2D, id);
+		}
+
+		return true;
+
+		/*
 		if (textures[slot - 1] != id) {
 			textures[slot - 1] = id;
-			glActiveTexture(GL_TEXTURE0 + slot);
-			if (type == 1) {
-				glBindTexture(GL_TEXTURE_CUBE_MAP, id);
-			}
-			else {
-				glBindTexture(GL_TEXTURE_2D, id);
-			}
+			
 
 			
 			return true;
 		}
 		return false;
+
+		*/
 	}
 }

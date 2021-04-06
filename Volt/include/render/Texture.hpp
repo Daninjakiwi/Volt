@@ -21,6 +21,7 @@ namespace volt {
 		unsigned long long m_id;
 		GlTexture* m_gl_tex;
 		bool m_is_initialised;
+		bool m_is_loaded;
 	public:
 		static std::unordered_map<unsigned int, TexData> s_load_queue;
 
@@ -35,6 +36,7 @@ namespace volt {
 
 		void init(const std::string& file, unsigned int scale_factor = 1);
 		void init(Vec4 colour);
+		void init(float* data, iVec2 size);
 	};
 
 	struct TexData {

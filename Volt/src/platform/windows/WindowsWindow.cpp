@@ -8,6 +8,33 @@
 
 #include <render/stb_image.h>
 
+std::string GetClipboardText() {
+	// Try opening the clipboard
+	if (!OpenClipboard(nullptr)) {
+		return "";
+	}
+
+	HANDLE hData = GetClipboardData(CF_TEXT);
+	if (hData == nullptr) {
+		return "";
+	}
+
+	char* pszText = static_cast<char*>(GlobalLock(hData));
+	if (pszText == nullptr) {
+		return "";
+	}
+
+	std::string text(pszText);
+
+	// Release the lock
+	GlobalUnlock(hData);
+
+	// Release the clipboard
+	CloseClipboard();
+
+	return text;
+}
+
 namespace volt {
 
 
@@ -29,6 +56,7 @@ namespace volt {
 			class_data.lpszMenuName = nullptr;
 			class_data.lpszClassName = name;
 			class_data.hIconSm = nullptr;
+			class_data.hCursor = LoadCursorA(nullptr, IDC_ARROW);
 
 			RegisterClassExA(&class_data);
 		}
@@ -84,9 +112,10 @@ namespace volt {
 		}
 	};
 
+
 	Win32Class window_class("volt_window");
 
-	Window::Window(const std::string& title, iVec2 size) : m_title(title), m_size(size), m_mouse_pos({}), m_delta(0.0), m_is_open(true), m_last_key(Keys::UNDEFINED), m_char_callback(nullptr) {
+	Window::Window(const std::string& title, iVec2 size) : m_title(title), m_size(size), m_mouse_pos({}), m_mouse_prev({}), m_delta(0.0), m_is_open(true), m_cursor_locked(false), m_last_key(Keys::UNDEFINED), m_char_callback(nullptr), m_mouse_callback(nullptr) {
 
 		MONITORINFO monitor = { sizeof(monitor) };
 		GetMonitorInfoA(MonitorFromWindow(m_handle, MONITOR_DEFAULTTOPRIMARY), &monitor);
@@ -107,11 +136,12 @@ namespace volt {
 		);
 
 		show();
+		
 	}
 
-	void Window::setViewMatrix(Mat4 view) {
+	void Window::setViewMatrix(Camera& cam) {
 		if (m_context) {
-			m_context->setViewMatrix(view);
+			m_context->setViewMatrix(cam);
 		}
 	}
 
@@ -141,24 +171,23 @@ namespace volt {
 	}
 
 	void Window::update() {
-		MSG message;
-		PeekMessageA(&message, m_handle, 0, 0, PM_REMOVE);
-		TranslateMessage(&message);
-		DispatchMessageA(&message);
-
-		HDC hdc = GetDC(m_handle);
-
-		//Render frame
-
 		if (m_context) {
 			m_context->renderFrame();
 		}
 
-		SwapBuffers(hdc);
 
-		if (m_context) {
-			m_context->clear();
+
+		MSG message;
+
+		while (PeekMessageA(&message, m_handle, 0, 0, PM_REMOVE)) {
+			TranslateMessage(&message);
+			DispatchMessageA(&message);
 		}
+		
+
+		HDC hdc = GetDC(m_handle);
+
+		SwapBuffers(hdc);
 
 		LARGE_INTEGER end_time, elapsed;
 		LARGE_INTEGER frequency;
@@ -173,6 +202,23 @@ namespace volt {
 		elapsed.QuadPart *= 100000000;
 		elapsed.QuadPart /= frequency.QuadPart;
 		m_delta = (double)elapsed.QuadPart / 100000000.0;
+
+		if (m_context) {
+			m_context->clear();
+		}
+
+		if (m_cursor_locked) {
+
+			POINT p;
+			p.x = 640.0f;
+			p.y = 360.0f;
+
+			ClientToScreen(m_handle, &p);
+
+
+			SetCursorPos(p.x, p.y);
+
+		}	
 	}
 
 	void Window::createContext(ContextType type) {
@@ -195,6 +241,15 @@ namespace volt {
 
 	bool Window::isMouseDown(Mouse button) {
 		if (m_mouse.find(button) != m_mouse.end()) {
+			return true;
+		}
+		return false;
+	}
+
+	bool Window::isMouseJustPressed(Mouse button) {
+		auto search = m_mouse.find(button);
+		if (search != m_mouse.end() && search->second == 0) {
+			search->second = 1;
 			return true;
 		}
 		return false;
@@ -266,6 +321,10 @@ namespace volt {
 		m_char_callback = callback;
 	}
 
+	void Window::setMouseCallback(void (*callback)(volt::iVec2)) {
+		m_mouse_callback = callback;
+	}
+
 	std::string Window::getTitle() const {
 		return m_title;
 	}
@@ -288,6 +347,24 @@ namespace volt {
 
 	void Window::close() {
 		m_is_open = false;
+	}
+
+	void Window::lockCursor() {
+		if (!m_cursor_locked) {
+			m_cursor_locked = true;
+			ShowCursor(false);
+			SetCursor(0);
+		}
+	
+	}
+
+	void Window::unlockCursor() {
+		if (m_cursor_locked) {
+			m_cursor_locked = false;
+			ShowCursor(true);
+			SetCursor(LoadCursorA(nullptr, IDC_ARROW));
+		}
+		
 	}
 
 	void Window::setBackgroundColour(Vec4 colour) {
@@ -324,20 +401,56 @@ namespace volt {
 		switch (message)
 		{
 		case WM_CHAR:
-			if (m_char_callback != nullptr) {
+		if (m_char_callback != nullptr) {
+			if (w_param != 22) {
 				m_char_callback((unsigned char)w_param);
 			}
-			break;
+			
+ 		}
+		break;
 		case WM_KEYDOWN:
+
+
 			m_last_key = (Keys)w_param;
 			m_keys.emplace((Keys)w_param, 0);
+
+			if (m_last_key == Keys::V && GetAsyncKeyState(VK_CONTROL)) {
+				if (m_char_callback != nullptr) {
+					for (unsigned char c : GetClipboardText()) {
+						m_char_callback(c);
+					}
+				}
+			}
+
 			break;
 		case WM_KEYUP:
 			m_keys.erase((Keys)w_param);
 			break;
 		case WM_MOUSEMOVE:
-			m_mouse_pos.x = LOWORD(l_param);
-			m_mouse_pos.y = m_size.y - HIWORD(l_param);
+		{
+
+			float x = LOWORD(l_param);
+			float y = m_size.y - HIWORD(l_param);
+
+
+
+			if (m_cursor_locked) {
+				//std::cout << x << std::endl;
+				if (x == m_size.x / 2 && y == m_size.y / 2) {
+				}
+				else {
+					m_mouse_pos.x += x - (m_size.x / 2);
+					m_mouse_pos.y += ((m_size.y / 2) - HIWORD(l_param));
+				}
+				
+			}
+			else {
+				m_mouse_pos.x = x;
+				m_mouse_pos.y = y;
+			}
+
+
+		}
 			break;
 		case WM_LBUTTONDOWN:
 			m_mouse.emplace(Mouse::LEFT, 0);

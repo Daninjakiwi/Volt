@@ -9,7 +9,7 @@ namespace volt {
 
 	float rot = 0.0f;
 
-	WglContext::WglContext(Window* window) : m_device(nullptr), m_context(nullptr), m_renderer_2d(nullptr), m_renderer_3d(nullptr) {
+	WglContext::WglContext(Window* window) : m_device(nullptr), m_context(nullptr), m_renderer_2d(nullptr), m_renderer_3d(nullptr), m_default() {
 		m_device = GetDC(window->m_handle);
 
 		HGLRC temp_context = wglCreateContext(m_device);
@@ -65,9 +65,12 @@ namespace volt {
 
 			glEnable(GL_DEPTH_TEST);
 
+			//glDisable(GL_CULL_FACE);
 
 			glEnable(GL_BLEND);
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+			//glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS).
 
 			if (major == 4) {
 				m_renderer_2d = new GlRenderer2d(window->m_size);
@@ -98,7 +101,13 @@ namespace volt {
 
 	void WglContext::drawTexture(Texture& tex, Vec2 pos, Vec2 size) {
 		if (m_renderer_2d) {
-			m_renderer_2d->drawTexture(tex, pos, size);
+			if (tex.m_is_loaded) {
+				m_renderer_2d->drawTexture(tex, pos, size);
+			}
+			else {
+				m_renderer_2d->drawTexture(m_default, pos, size);
+			}
+			
 		}
 	}
 
@@ -121,16 +130,21 @@ namespace volt {
 
 
 	void WglContext::renderFrame() {
+		/*
 		while (!Texture::s_load_queue.empty()) {
+			std::cout << "textures to be loaded" << std::endl;
 			for (int i = 0; i < 100; i++) {
 				if (Texture::s_load_queue.find(i) != Texture::s_load_queue.end()) {
 					auto current = Texture::s_load_queue.at(i);
 					current.tex->m_gl_tex->load(current.data, { current.tex->m_width, current.tex->m_height });
 					free(current.data);
+					current.tex->m_is_loaded = true;
 					Texture::s_load_queue.erase(i);
+					std::cout << "texture loaded" << std::endl;
 				}
 			}
 		}
+		*/
 
 		if (m_renderer_3d) {
 			m_renderer_3d->renderFrame();
@@ -149,9 +163,9 @@ namespace volt {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
-	void WglContext::setViewMatrix(Mat4 view) {
+	void WglContext::setViewMatrix(Camera& cam) {
 		if (m_renderer_3d) {
-			m_renderer_3d->setViewMatrix(view);
+			m_renderer_3d->setViewMatrix(cam);
 		}
 	}
 

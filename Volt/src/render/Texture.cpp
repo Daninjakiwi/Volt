@@ -20,8 +20,11 @@ namespace volt {
 	void loadTexture(const std::string& file, Texture* tex, unsigned int scale_factor) {
 		stbi_set_flip_vertically_on_load(true);
 
+		std::cout << "stbi loading " << file << std::endl;
 		int bpp;
 		void* buffer = stbi_load(file.c_str(), &tex->m_width, &tex->m_height, &bpp, 4);
+
+		std::cout << "stbi load complete" << std::endl;
 
 		int biggest = tex->m_width > tex->m_height ? tex->m_width : tex->m_height;
 
@@ -46,18 +49,27 @@ namespace volt {
 			tex->m_height /= scale_factor;
 		}
 
+		tex->m_gl_tex->load(buffer, { tex->m_width, tex->m_height });
 
-		TexData d;
-		d.tex = tex;
-		d.data = buffer;
 
-		Texture::s_load_queue[count] = d;
+		//TexData d;
+		//d.tex = tex;
+		//d.data = buffer;
 
-		count = count == 100 ? 0 : count + 1;
+		//Texture::s_load_queue[count] = d;
+
+		//count = count == 100 ? 0 : count + 1;
+
+		//std::cout << "stbi load cleanup" << std::endl;
 	}
 
-	Texture::Texture() : m_id(resources::assignId()), m_gl_tex(nullptr), m_width(1), m_height(1), m_is_initialised(false) {
+	Texture::Texture() : m_id(resources::assignId()), m_gl_tex(nullptr), m_width(1), m_height(1), m_is_initialised(false), m_is_loaded(false) {
 		m_gl_tex = new GlTexture();
+	}
+
+	void Texture::init(float* data, iVec2 size) {
+		m_gl_tex->load(data, size, true);
+		m_is_loaded = true;
 	}
 
 	void Texture::init(const std::string& file, unsigned int scale_factor) {
@@ -65,7 +77,8 @@ namespace volt {
 			glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_tex_size);
 		}
 		m_is_initialised = true;
-		std::thread{ loadTexture,file,this, scale_factor }.detach();
+		//std::thread{ loadTexture,file,this, scale_factor }.detach();
+		loadTexture(file, this, scale_factor);
 	}
 
 	void Texture::init(Vec4 colour) {

@@ -12,6 +12,7 @@ namespace volt {
 	class DynamicTexture {
 	private:
 		static Quality s_current;
+		static Texture s_default;
 
 		std::string m_path;
 		Texture m_textures[4];

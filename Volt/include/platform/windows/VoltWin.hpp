@@ -11,11 +11,9 @@
 #define NOSYSMETRICS
 #define NOMENUS
 #define NOICONS
-#define NOSYSCOMMANDS
 #define NORASTEROPS
 #define OEMRESOURCE
 #define NOATOM
-#define NOCLIPBOARD
 #define NOCOLOR
 #define NOCTLMGR
 #define NODRAWTEXT
@@ -28,7 +26,6 @@
 #define NOSERVICE
 #define NOSOUND
 #define NOTEXTMETRIC
-#define NOWH
 #define NOCOMM
 #define NOKANJI
 #define NOHELP

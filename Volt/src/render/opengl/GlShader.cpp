@@ -11,8 +11,6 @@ namespace volt {
 
 		if (vert != 0 && frag != 0) {
 
-			std::cout << "shader ok" << std::endl;
-
 			glAttachShader(m_id, vert);
 			glAttachShader(m_id, frag);
 
